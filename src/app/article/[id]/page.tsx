@@ -20,11 +20,19 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
 
     return {
       title: `${article.title} - choto`,
-      description: article.excerpt || article.desc_list[0].value || "Read the latest news article",
+      description: typeof article.desc_list[0].value === 'string' 
+      ? article.desc_list[0].value 
+      : Array.isArray(article.desc_list[0].value) 
+        ? article.desc_list[0].value[0] || "Read the latest news article" 
+        : "Read the latest news article",
       keywords: article.keyword_list || ["news", "article", article.category || "general"],
       openGraph: {
         title: article.title,
-        description: article.excerpt || article.desc_list[0].value || "Read the latest news article",
+        description: typeof article.desc_list[0].value === 'string' 
+        ? article.desc_list[0].value 
+        : Array.isArray(article.desc_list[0].value) 
+          ? article.desc_list[0].value[0] || "Read the latest news article" 
+          : "Read the latest news article",
         images: [article.image_url || "/default-image.jpg"],
         url: `https://xyznews.com/article/${params.id}`, // Use your production domain
         type: "article",
@@ -33,12 +41,17 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
       twitter: {
         card: "summary_large_image",
         title: article.title,
-        description: article.excerpt || article.desc_list[0].value || "Read the latest news article",
+        description: typeof article.desc_list[0].value === 'string' 
+        ? article.desc_list[0].value 
+        : Array.isArray(article.desc_list[0].value) 
+          ? article.desc_list[0].value[0] || "Read the latest news article" 
+          : "Read the latest news article",
         images: [article.image_url || "/default-image.jpg"],
       },
       // canonical: `https://xyznews.com/article/${params.id}`, // Canonical URL for SEO
     };
   } catch (error) {
+    console.log(error)
     return {
       title: "Article Not Found - xyznews",
       description: "The requested article could not be found.",
@@ -240,9 +253,13 @@ export default async function ArticleDetail({ params }: ArticleDetailPageProps) 
                   "@type": "NewsArticle",
                   headline: articleData.title,
                   image: articleData.image_url || "https://pugnanews.com/default-image.jpg",
-                  author: articleData.author ? { "@type": "Person", name: articleData.author } : undefined,
+                  // author: articleData.author ? { "@type": "Person", name: articleData.author } : undefined,
                   datePublished: articleData.formatted_datetime,
-                  description: articleData.excerpt || articleData.desc_list[0]?.value || "Read the latest news article",
+                  description: typeof articleData.desc_list[0].value === 'string' 
+                  ? articleData.desc_list[0].value 
+                  : Array.isArray(articleData.desc_list[0].value) 
+                    ? articleData.desc_list[0].value[0] || "Read the latest news article" 
+                    : "Read the latest news article",
                   url: `https://pugnanews.com/article/${id}`,
                   publisher: {
                     "@type": "Organization",
@@ -329,7 +346,7 @@ export default async function ArticleDetail({ params }: ArticleDetailPageProps) 
       </div>
     );
   } catch (error) {
-    console.error("Fetch error:", error.message);
+    console.error("Fetch error:", error);
     return (
       <div className="container mx-auto p-4 bg-black text-black min-h-screen">
         <h1 className="text-2xl font-bold text-center">Error Loading Article</h1>

@@ -21,12 +21,11 @@ export default function Footer() {
           {/* Quick Links */}
           <div className="flex flex-col space-y-2">
             <h3 className="text-lg font-semibold mb-2 text-gray-300">Links</h3>
-            <a
-              href="/"
+            <span
               className="text-gray-400 hover:text-white transition-colors duration-200"
             >
               Home
-            </a>
+            </span>
             <a
               href="/category/general"
               className="text-gray-400 hover:text-white transition-colors duration-200"

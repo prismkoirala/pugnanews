@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, ThunkDispatch } from "@reduxjs/toolkit";
 import { ArticleState, PaginatedArticle } from "../types";
-
+import { UnknownAction } from '@reduxjs/toolkit'; // Replace AnyAction with this
+import { RootState } from './store'; // Import RootState from store.tsx
 
 const initialState: ArticleState = {
     paginated_articles: null,
@@ -32,21 +33,24 @@ export const { fetchPaginatedArticleStart, fetchPaginatedArticleSuccess, fetchPa
 export default newsSlice.reducer;
 
 
-export const fetchPaginatedArticles = () => async (dispatch: any) => {
-    dispatch(fetchPaginatedArticleStart());
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
-        mode: "cors",
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log("API Response:", data); // Log the response to debug
-      dispatch(fetchPaginatedArticleSuccess(data));
-    } catch (error) {
-      console.error("Fetch error:", error.message);
-      dispatch(fetchPaginatedArticleFailure(error.message));
+export const fetchPaginatedArticles = () => async (
+  dispatch: ThunkDispatch<RootState, unknown, UnknownAction> // Use RootState here
+  ) => {
+  dispatch(fetchPaginatedArticleStart());
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
+      mode: "cors",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    const data = await response.json();
+    console.log("API Response:", data);
+    dispatch(fetchPaginatedArticleSuccess(data));
+  } catch (error) {
+    console.error("Fetch error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    dispatch(fetchPaginatedArticleFailure(errorMessage));
+  }
+};

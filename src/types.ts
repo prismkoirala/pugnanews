@@ -8,7 +8,7 @@ export interface NewsCategory {
 
 export interface ArticleDescription{
     type: string;
-    value:string | string[]
+    value?: string | string[] | undefined
 }
 
 export interface Article {
