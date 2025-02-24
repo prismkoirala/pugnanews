@@ -8,8 +8,9 @@ interface ArticleDetailPageProps {
 }
 
 export async function generateMetadata({ params }: ArticleDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${params.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${id}`, {
       mode: "cors",
       credentials: "include",
     });
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
           ? article.desc_list[0].value[0] || "Read the latest news article" 
           : "Read the latest news article",
         images: [article.image_url || "/default-image.jpg"],
-        url: `https://xyznews.com/article/${params.id}`, // Use your production domain
+        url: `https://xyznews.com/article/${id}`, // Use your production domain
         type: "article",
         siteName: "chotomedia",
       },
@@ -60,7 +61,8 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
 }
 
 export default async function ArticleDetail({ params }: ArticleDetailPageProps) {
-  const id = params.id;
+  const resolvedParams = await params; // Await the Promise
+  const { id } = resolvedParams;
 
   try {
     // Fetch the specific article by ID
