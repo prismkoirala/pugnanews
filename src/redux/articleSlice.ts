@@ -38,7 +38,7 @@ export const fetchPaginatedArticles = () => async (
   ) => {
   dispatch(fetchPaginatedArticleStart());
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/`, {
       mode: "cors",
       credentials: "include",
     });

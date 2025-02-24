@@ -10,7 +10,7 @@ interface ArticleDetailPageProps {
 export async function generateMetadata({ params }: ArticleDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${id}/`, {
       mode: "cors",
       credentials: "include",
     });
@@ -76,7 +76,7 @@ export default async function ArticleDetail({ params }: ArticleDetailPageProps) 
     const articleData = await articleResponse.json() as Article;
     console.log('articleData:', articleData)
     // Fetch other news (e.g., latest articles, excluding the current article)
-    const otherArticleResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post?limit=5`, {
+    const otherArticleResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/?limit=5`, {
       mode: "cors",
       credentials: "include",
     });
