@@ -4,8 +4,8 @@ import Image from "next/image";
 import { Article, ArticleDescription, PaginatedArticle } from "@/types";
 
 interface ArticleDetailPageProps {
-  params: { id: string };
-}
+  params: Promise<{ id: string }>; // Type params as a Promise
+  }
 
 export async function generateMetadata({ params }: ArticleDetailPageProps): Promise<Metadata> {
   const { id } = await params;
